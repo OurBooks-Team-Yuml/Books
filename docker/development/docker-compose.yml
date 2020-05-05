@@ -1,0 +1,41 @@
+version: '3.7'
+
+networks:
+    books:
+        external: false
+
+services:
+    db:
+        image: mongo:latest
+        networks:
+            - books
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: books
+            MONGO_INITDB_ROOT_PASSWORD: secret
+            MONGO_INITDB_DATABASE: books
+    web:
+        build:
+            context: ../..
+            dockerfile: ./docker/development/Dockerfile
+        volumes:
+            - ../../:/app
+            - "web-packages:/usr/local/lib/python3.8/site-packages"
+            - "web-bin:/usr/local/bin"
+        networks:
+            - books
+        environment:
+            DATABASE_URI: mongodb://books:secret@db
+            DATABASE: books
+        
+        working_dir: /app
+        ports:
+            - 8000:8000
+        command: '/app/tools/run-backend.sh'
+        depends_on:
+            - db
+
+volumes:
+    web-packages:
+    web-bin:
+    db:
+
