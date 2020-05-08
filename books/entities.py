@@ -18,3 +18,4 @@ class Author:
     birthday_date: str
     biography: str
     image_path: str
+    books: list
