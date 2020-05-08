@@ -1,5 +1,6 @@
-from .database import books_coll
-from .entities import Book
+from .database import Author as AuthorDB, Book as BookDB
+from .entities import Author, Book
+
 
 class BaseBookRepository(object):
     pass

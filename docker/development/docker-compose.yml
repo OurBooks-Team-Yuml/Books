@@ -5,14 +5,16 @@ networks:
         external: false
 
 services:
-    db:
-        image: mongo:latest
+    books-db:
+        image: postgres:12-alpine
+        environment:
+            POSTGRES_PASSWORD: secret
+            POSTGRES_USER: books
+            POSTGRES_DB: books
+        volumes:
+            - "books-db:/var/lib/postgresql/data"
         networks:
             - books
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: books
-            MONGO_INITDB_ROOT_PASSWORD: secret
-            MONGO_INITDB_DATABASE: books
     web:
         build:
             context: ../..
@@ -24,18 +26,15 @@ services:
         networks:
             - books
         environment:
-            DATABASE_URI: mongodb://books:secret@db
-            DATABASE: books
-        
+            DATABASE_URI: postgresql://books:secret@books-db:5432/books
         working_dir: /app
         ports:
-            - 8000:8000
+            - 8001:8001
         command: '/app/tools/run-backend.sh'
         depends_on:
-            - db
+            - books-db
 
 volumes:
     web-packages:
     web-bin:
-    db:
-
+    books-db:
