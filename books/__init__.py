@@ -10,9 +10,11 @@ def create_app():
     app.config.from_mapping(SECRET_KEY='books')
 
     from . import database
-    from .schema import schema
 
-    app.add_url_rule('/books', view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True))
+    ### TODO
+    # from .schema import schema
+
+    # app.add_url_rule('/books', view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True))
 
     CORS(app)
 
