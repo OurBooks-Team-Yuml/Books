@@ -22,5 +22,6 @@ class BookRepository(BaseBookRepository):
             book.image_path,
             book.isbn,
             book.publishing_house,
-            book.published_date
+            book.published_date,
+            book.categories,
         )

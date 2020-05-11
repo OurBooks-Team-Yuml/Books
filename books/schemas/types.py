@@ -17,6 +17,11 @@ class BookAuthorType(graphene.ObjectType):
         return f"{author.first_name} {author.last_name}"
 
 
+class CategoryType(graphene.ObjectType):
+    id = graphene.ID()
+    name = graphene.String()
+
+
 class RelatedBookType(graphene.ObjectType):
     id = graphene.ID()
 
@@ -31,6 +36,8 @@ class RelatedBookType(graphene.ObjectType):
     publishing_house = graphene.String()
 
     published_date = Date()
+
+    categories = graphene.List(CategoryType)
 
 
 class BookType(RelatedBookType):

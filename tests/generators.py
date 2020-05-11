@@ -42,6 +42,8 @@ def book(draw):
 
     date = draw(st.dates())
 
+    category = draw_string(draw)
+
     related_book = None ### TODO
 
     return Book(
@@ -53,5 +55,6 @@ def book(draw):
         image_path,
         isbn,
         publishing_house,
-        date
+        date,
+        [category]
     )

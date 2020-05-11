@@ -14,8 +14,9 @@ class Book:
 
     isbn: str
     publishing_house: str
-
     published_date: str
+
+    categories: list
 
 
 @dataclass
