@@ -3,7 +3,7 @@ import os
 from sqlalchemy import (create_engine, Column, Date, ForeignKey,
     Integer, MetaData, String, Table, Text)
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, sessionmaker
 
 
 engine = create_engine(os.environ['DATABASE_URI'])
@@ -46,3 +46,8 @@ class Book(Base):
 
 if not engine.dialect.has_table(engine, 'authors'):
     Base.metadata.create_all(engine)
+
+
+def get_session():
+    Session = sessionmaker(bind=engine)
+    return Session()
