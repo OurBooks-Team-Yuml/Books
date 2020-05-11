@@ -41,7 +41,14 @@ class Book(Base):
     image_path = Column(String(1000))
 
     authors_id = relationship(Author, secondary=joined_table, backref="books")
-    related_book = Column(Integer, ForeignKey('books.id'))
+
+    related_book_id = Column(Integer, ForeignKey('books.id'))
+    related_book = relationship("Book")
+
+    isbn = Column(String(50), unique=True)
+    publishing_house = Column(String(200))
+
+    published_date = Column(Date())
 
 
 if not engine.dialect.has_table(engine, 'authors'):

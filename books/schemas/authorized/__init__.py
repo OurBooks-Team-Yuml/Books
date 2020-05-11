@@ -1,9 +1,10 @@
 import graphene # type: ignore
 
-from .queries import *
+from .author_queries import *
+from .books_queries import *
 
 
-class Query(AllAuthors, graphene.ObjectType):
+class Query(AllAuthors, AllBooks, graphene.ObjectType):
     pass
 
 
