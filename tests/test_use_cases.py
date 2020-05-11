@@ -14,3 +14,13 @@ def test_get_all_authors_returns_correct_list(authors):
 
     result = list(get_all_authors(SuccessListRepository()))
     assert len(result) == len(authors)
+
+
+@given(st.lists(book()))
+def test_get_all_books_returns_correct_list(books):
+    class SuccessListRepository(BaseAuthorRepository):
+        def get_books(*args, **kwargs):
+            return books
+
+    result = list(get_all_books(SuccessListRepository()))
+    assert len(result) == len(books)

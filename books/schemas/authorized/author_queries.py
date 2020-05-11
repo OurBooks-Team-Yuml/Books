@@ -1,7 +1,7 @@
 import graphene # type: ignore
 import inject # type: ignore
 
-from books.schemas.types import AuthorType, BookType
+from books.schemas.types import AuthorType
 from books.use_cases import *
 from books.use_cases.repositories import BaseAuthorRepository
 
