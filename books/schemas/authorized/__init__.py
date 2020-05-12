@@ -4,7 +4,7 @@ from .author_queries import *
 from .books_queries import *
 
 
-class Query(AllAuthors, AllBooks, GetBook, graphene.ObjectType):
+class Query(AllAuthors, AllBooks, GetAuthor, GetBook, graphene.ObjectType):
     pass
 
 

@@ -21,3 +21,12 @@ def get_single_book(id: int, repository: BaseBookRepository) -> Optional[Book]:
         raise BookNotFound
 
     return book
+
+
+def get_single_author(id: int, repository: BaseAuthorRepository) -> Optional[Author]:
+    author = repository.get_author(id)
+
+    if not author:
+        raise AuthorNotFound
+
+    return author
