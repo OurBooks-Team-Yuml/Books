@@ -14,6 +14,15 @@ def get_all_books(repository: BaseBookRepository) -> Iterator[Book]:
     return repository.get_books()
 
 
+def get_single_book(id: int, repository: BaseBookRepository) -> Optional[Book]:
+    book = repository.get_book(id)
+
+    if not book:
+        raise BookNotFound
+
+    return book
+
+
 def get_single_author(id: int, repository: BaseAuthorRepository) -> Optional[Author]:
     author = repository.get_author(id)
 
