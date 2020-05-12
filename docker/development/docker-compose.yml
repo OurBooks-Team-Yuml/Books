@@ -27,14 +27,35 @@ services:
             - books
         environment:
             DATABASE_URI: postgresql://books:secret@books-db:5432/books
+            AWS_BOOKS_BUCKET_NAME: books
+            AWS_AUTHORS_BUCKET_NAME: authors
+            AWS_ENDPOINT_URL: http://localstack:4566
+            AWS_ACCESS_KEY_ID: secret
+            AWS_SECRET_ACCESS_KEY: secret
         working_dir: /app
         ports:
             - 8001:8001
         command: '/app/tools/run-backend.sh'
         depends_on:
             - books-db
+    localstack:
+        image: localstack/localstack
+        ports:
+            - "4562-4584:4562-4584"
+            - "8080:8080"
+        environment:
+            - SERVICES=s3
+            - DEBUG=1
+            - DATA_DIR=/tmp/localstack/data
+        volumes:
+            - 'localstack:/tmp/localstack'
+            - '/var/run/docker.sock:/var/run/docker.sock'
+            - './docker-entrypoint-initaws.d:/docker-entrypoint-initaws.d'
+        networks:
+            - books
 
 volumes:
     web-packages:
     web-bin:
     books-db:
+    localstack:
