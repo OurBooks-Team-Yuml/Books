@@ -30,3 +30,11 @@ class BaseBookRepository(object):
 
     def update(self, id: int, data: dict) -> Book:
         raise NotImplementedError
+
+
+class BaseS3Repository(object):
+    def save_author_image(self, image: bytes, key: str) -> str:
+        raise NotImplementedError
+
+    def save_book_image(self, image: bytes, key: str) -> str:
+        raise NotImplementedError

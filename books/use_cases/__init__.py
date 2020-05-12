@@ -1,9 +1,11 @@
+import uuid
+
 from typing import Iterator, Optional
 
 from books.entities import *
 
 from .exceptions import *
-from .repositories import BaseAuthorRepository, BaseBookRepository
+from .repositories import BaseAuthorRepository, BaseBookRepository, BaseS3Repository
 
 
 def get_all_authors(repository: BaseAuthorRepository) -> Iterator[Author]:
@@ -30,3 +32,17 @@ def get_single_author(id: int, repository: BaseAuthorRepository) -> Optional[Aut
         raise AuthorNotFound
 
     return author
+
+
+def new_author(data: dict, image: bytes, repository: BaseAuthorRepository, s3: BaseS3Repository) -> Author:
+    key = f"{data['first_name']}-{data['last_name']}-{uuid.uuid4()}.{image.filename.split('.')[-1]}"
+    path = s3.save_author_image(image, key)
+
+    return repository.create({**data, 'image_path': path})
+
+
+def new_book(data: dict, image: bytes, repository: BaseBookRepository, s3: BaseS3Repository) -> Book:
+    key = f"{data['name']}-{uuid.uuid4()}.{image.filename.split('.')[-1]}"
+    path = s3.save_book_image(image, key)
+
+    return repository.create({**data, 'image_path': path})

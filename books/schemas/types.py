@@ -6,6 +6,20 @@ from graphene.types.datetime import Date # type: ignore
 from books.entities import Author, Book
 
 
+class Upload(graphene.Scalar):
+    @staticmethod
+    def serialize(value):
+        return value
+
+    @staticmethod
+    def parse_literal(node):
+        return node
+
+    @staticmethod
+    def parse_value(value):
+        return value
+
+
 class BookAuthorType(graphene.ObjectType):
     id = graphene.ID()
 
@@ -28,7 +42,7 @@ class RelatedBookType(graphene.ObjectType):
     name = graphene.String()
     description = graphene.String()
 
-    image_path = graphene.String()
+    image_path = Upload()
 
     authors_id = graphene.List(BookAuthorType)
 
@@ -52,6 +66,6 @@ class AuthorType(BookAuthorType):
     birthday_date = graphene.String()
     biography = graphene.String()
 
-    image_path = graphene.String()
+    image_path = Upload()
 
     books = graphene.List(BookType)
