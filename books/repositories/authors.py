@@ -21,6 +21,17 @@ class AuthorRepository(BaseAuthorRepository):
 
         return self._create_author(author)
 
+    def create(self, data: dict) -> Author:
+        session = get_session()
+
+        author = AuthorDB(**data)
+
+        session.add(author)
+        session.commit()
+        session.flush()
+
+        return self._create_author(author)
+
     def _create_author(self, author: AuthorDB) -> Author:
         return Author(
             author.id,

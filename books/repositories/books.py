@@ -1,6 +1,6 @@
 from typing import Iterator, Optional
 
-from books.database import Book as BookDB, get_session
+from books.database import Author as AuthorDB, Book as BookDB, Category, get_session
 from books.entities import Book
 from books.use_cases.repositories import BaseBookRepository
 
@@ -18,6 +18,24 @@ class BookRepository(BaseBookRepository):
 
         if not book:
             return None
+
+        return self._create_book(book)
+
+    def create(self, data: dict) -> Book:
+        session = get_session()
+
+        authors_id = data.pop('authors_id', None)
+        categories = data.pop('categories', None)
+
+        book = BookDB(**data)
+
+        ### TODO find better way to do it.
+        book.authors_id = session.query(AuthorDB).filter(AuthorDB.id.in_(authors_id)).all()
+        book.categories = session.query(Category).filter(Category.id.in_(categories)).all()
+
+        session.add(book)
+        session.commit()
+        session.flush()
 
         return self._create_book(book)
 

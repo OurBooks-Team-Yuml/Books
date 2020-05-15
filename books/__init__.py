@@ -11,10 +11,15 @@ def create_app():
 
     from . import database
     from .schemas import authorized
+    from .schemas import secured
 
     app.add_url_rule(
         '/books/authorized/',
-        view_func=GraphQLView.as_view('graphql', schema=authorized.schema, graphiql=True))
+        view_func=GraphQLView.as_view('authorized', schema=authorized.schema, graphiql=True))
+
+    app.add_url_rule(
+        '/books/secured/',
+        view_func=GraphQLView.as_view('secured', schema=secured.schema, graphiql=True))
 
     CORS(app)
 
