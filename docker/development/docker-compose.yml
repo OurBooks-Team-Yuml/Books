@@ -2,7 +2,7 @@ version: '3.7'
 
 networks:
     books:
-        external: false
+        name: books-external
 
 services:
     books-db:
@@ -32,6 +32,9 @@ services:
             AWS_ENDPOINT_URL: http://localstack:4566
             AWS_ACCESS_KEY_ID: secret
             AWS_SECRET_ACCESS_KEY: secret
+            ES_BOOKS_INDEX: books
+            ES_AUTHORS_INDEX: authors
+            ES_URL: http://elastic:9200
         working_dir: /app
         ports:
             - 8001:8001
@@ -51,6 +54,14 @@ services:
             - 'localstack:/tmp/localstack'
             - '/var/run/docker.sock:/var/run/docker.sock'
             - './docker-entrypoint-initaws.d:/docker-entrypoint-initaws.d'
+        networks:
+            - books
+    elastic:
+        image: elasticsearch:7.7.0
+        environment:
+            discovery.type: single-node
+        ports:
+            - "9200:9200"
         networks:
             - books
 

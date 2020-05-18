@@ -8,12 +8,13 @@ import inject # type: ignore
 from books.schemas.types import AuthorType, Upload
 from books.use_cases import *
 from books.use_cases.exceptions import *
-from books.use_cases.repositories import BaseAuthorRepository, BaseS3Repository
+from books.use_cases.repositories import *
 
 
 @inject.autoparams()
-def get_repositories(repository: BaseAuthorRepository, s3: BaseS3Repository):
-    return repository, s3
+def get_repositories(
+    repository: BaseAuthorRepository, s3: BaseS3Repository, elastic: BaseElasticRepository):
+    return repository, s3, elastic
 
 
 class CreateAuthor(graphene.Mutation):

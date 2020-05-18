@@ -38,3 +38,11 @@ class BaseS3Repository(object):
 
     def save_book_image(self, image: bytes, key: str) -> str:
         raise NotImplementedError
+
+
+class BaseElasticRepository(object):
+    def add_book(self, book: Book) -> None:
+        raise NotImplementedError
+
+    def add_author(self, author: Author) -> None:
+        raise NotImplementedError
