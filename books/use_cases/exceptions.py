@@ -4,3 +4,11 @@ class BookNotFound(Exception):
 
 class AuthorNotFound(Exception):
     pass
+
+
+class CategoryAlreadyExists(Exception):
+    pass
+
+
+class CategoryDoesNotExists(Exception):
+    pass
