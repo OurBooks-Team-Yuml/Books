@@ -31,3 +31,9 @@ class Author:
     image_path: str
 
     books: list
+
+
+@dataclass
+class Category:
+    id: int
+    name: str

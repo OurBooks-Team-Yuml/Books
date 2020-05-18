@@ -5,7 +5,7 @@ from typing import Iterator, Optional
 from books.entities import *
 
 from .exceptions import *
-from .repositories import BaseAuthorRepository, BaseBookRepository, BaseS3Repository
+from .repositories import *
 
 
 def get_all_authors(repository: BaseAuthorRepository) -> Iterator[Author]:
@@ -46,3 +46,31 @@ def new_book(data: dict, image: bytes, repository: BaseBookRepository, s3: BaseS
     path = s3.save_book_image(image, key)
 
     return repository.create({**data, 'image_path': path})
+
+
+def new_category(data: dict, repository: BaseCategoryRepository) -> Optional[Category]:
+    category = repository.get_by_name(data['name'])
+
+    if category:
+        raise CategoryAlreadyExists
+
+    return repository.add(data)
+
+
+def update_category(data: dict, repository: BaseCategoryRepository) -> Optional[Category]:
+    id = data.pop('id', None)
+    category = repository.get_by_id(id)
+
+    if not category:
+        raise CategoryDoesNotExists
+
+    category = repository.get_by_name(data['name'])
+
+    if category:
+        raise CategoryAlreadyExists
+
+    return repository.update(id, data)
+
+
+def get_all_categories(repository: BaseCategoryRepository) -> Iterator[Category]:
+    return repository.get_categories()
