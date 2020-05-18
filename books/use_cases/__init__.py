@@ -58,3 +58,31 @@ def new_book(data: dict, image: bytes,
     book = repository.create({**data, 'image_path': path})
     elastic.add_book(book)
     return book
+
+
+def new_category(data: dict, repository: BaseCategoryRepository) -> Optional[Category]:
+    category = repository.get_by_name(data['name'])
+
+    if category:
+        raise CategoryAlreadyExists
+
+    return repository.add(data)
+
+
+def update_category(data: dict, repository: BaseCategoryRepository) -> Optional[Category]:
+    id = data.pop('id', None)
+    category = repository.get_by_id(id)
+
+    if not category:
+        raise CategoryDoesNotExists
+
+    category = repository.get_by_name(data['name'])
+
+    if category:
+        raise CategoryAlreadyExists
+
+    return repository.update(id, data)
+
+
+def get_all_categories(repository: BaseCategoryRepository) -> Iterator[Category]:
+    return repository.get_categories()
