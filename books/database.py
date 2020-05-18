@@ -1,5 +1,7 @@
 import os
 
+from elasticsearch import Elasticsearch
+
 from sqlalchemy import (create_engine, Column, Date, ForeignKey,
     Integer, MetaData, String, Table, Text)
 from sqlalchemy.ext.declarative import declarative_base
@@ -71,10 +73,16 @@ if not engine.dialect.has_table(engine, 'authors'):
     Session = sessionmaker(bind=engine)
     session = Session()
 
+    es_url = os.environ.get('ES_URL', None)
+
     for book in books.books:
         session.add(Book(**book))
         session.commit()
         session.flush()
+
+        if es_url:
+            es = Elasticsearch(es_url)
+            es.index(index=os.environ['ES_BOOKS_INDEX'], id=book.id, body=book)
 
     for category in categories.categories:
         session.add(Category(**category))
@@ -85,6 +93,10 @@ if not engine.dialect.has_table(engine, 'authors'):
         session.add(Author(**author))
         session.commit()
         session.flush()
+
+        if es_url:
+            es = Elasticsearch(es_url)
+            es.index(index=os.environ['ES_AUTHORS_INDEX'], id=author.id, body=author)
 
     engine.execute(joined_table.insert({'author_id': 1, 'book_id': 1}))
     engine.execute(joined_table.insert({'author_id': 1, 'book_id': 2}))

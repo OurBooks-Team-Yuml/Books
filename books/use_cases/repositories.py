@@ -55,3 +55,11 @@ class BaseCategoryRepository(object):
 
     def update(self, id: int, data: dict) -> Category:
         raise NotImplementedError
+
+
+class BaseElasticRepository(object):
+    def add_book(self, book: Book) -> None:
+        raise NotImplementedError
+
+    def add_author(self, author: Author) -> None:
+        raise NotImplementedError

@@ -34,18 +34,30 @@ def get_single_author(id: int, repository: BaseAuthorRepository) -> Optional[Aut
     return author
 
 
-def new_author(data: dict, image: bytes, repository: BaseAuthorRepository, s3: BaseS3Repository) -> Author:
-    key = f"{data['first_name']}-{data['last_name']}-{uuid.uuid4()}.{image.filename.split('.')[-1]}"
-    path = s3.save_author_image(image, key)
+def new_author(data: dict, image: bytes,
+    repository: BaseAuthorRepository, s3: BaseS3Repository, elastic: BaseElasticRepository) -> Author:
+    path = None
 
-    return repository.create({**data, 'image_path': path})
+    if image:
+        key = f"{data['first_name']}-{data['last_name']}-{uuid.uuid4()}.{image.filename.split('.')[-1]}"
+        path = s3.save_author_image(image, key)
+
+    author = repository.create({**data, 'image_path': path})
+    elastic.add_author(author)
+    return author
 
 
-def new_book(data: dict, image: bytes, repository: BaseBookRepository, s3: BaseS3Repository) -> Book:
-    key = f"{data['name']}-{uuid.uuid4()}.{image.filename.split('.')[-1]}"
-    path = s3.save_book_image(image, key)
+def new_book(data: dict, image: bytes,
+    repository: BaseBookRepository, s3: BaseS3Repository, elastic: BaseElasticRepository) -> Book:
+    path = None
 
-    return repository.create({**data, 'image_path': path})
+    if image:
+        key = f"{data['name']}-{uuid.uuid4()}.{image.filename.split('.')[-1]}"
+        path = s3.save_book_image(image, key)
+
+    book = repository.create({**data, 'image_path': path})
+    elastic.add_book(book)
+    return book
 
 
 def new_category(data: dict, repository: BaseCategoryRepository) -> Optional[Category]:
