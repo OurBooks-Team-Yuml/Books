@@ -45,7 +45,7 @@ services:
         image: localstack/localstack
         ports:
             - "4562-4584:4562-4584"
-            - "8080:8080"
+            - "8090:8090"
         environment:
             - SERVICES=s3
             - DEBUG=1
