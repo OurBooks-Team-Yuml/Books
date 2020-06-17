@@ -9,23 +9,23 @@ from books.use_cases.repositories import *
 from .generators import *
 
 
-@given(st.lists(author()))
+@given(st.lists(author(), max_size=15))
 def test_get_all_authors_returns_correct_list(authors):
     class SuccessListRepository(BaseAuthorRepository):
         def get_authors(*args, **kwargs):
             return authors
 
-    result = list(get_all_authors(SuccessListRepository()))
+    result = list(get_all_authors(1, SuccessListRepository()))
     assert len(result) == len(authors)
 
 
-@given(st.lists(book()))
+@given(st.lists(book(), max_size=15))
 def test_get_all_books_returns_correct_list(books):
     class SuccessListRepository(BaseBookRepository):
         def get_books(*args, **kwargs):
             return books
 
-    result = list(get_all_books(SuccessListRepository()))
+    result = list(get_all_books(1, SuccessListRepository()))
     assert len(result) == len(books)
 
 

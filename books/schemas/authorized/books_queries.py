@@ -10,11 +10,11 @@ from books.use_cases.repositories import BaseBookRepository
 
 
 class AllBooks(object):
-    books = graphene.List(BookType)
+    books = graphene.List(BookType, page=graphene.Int(default_value=1))
 
     @inject.autoparams()
-    def resolve_books(self, info, repository: BaseBookRepository):
-        return get_all_books(repository)
+    def resolve_books(self, info, page: int, repository: BaseBookRepository):
+        return get_all_books(page, repository)
 
 
 class GetBook(object):

@@ -10,11 +10,11 @@ from books.use_cases.repositories import BaseAuthorRepository
 
 
 class AllAuthors(object):
-    authors = graphene.List(AuthorType)
+    authors = graphene.List(AuthorType, page=graphene.Int(default_value=1))
 
     @inject.autoparams()
-    def resolve_authors(self, info, repository: BaseAuthorRepository):
-        return get_all_authors(repository)
+    def resolve_authors(self, info, page: int, repository: BaseAuthorRepository):
+        return get_all_authors(page, repository)
 
 
 class GetAuthor(object):
