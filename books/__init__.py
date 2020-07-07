@@ -4,6 +4,8 @@ from flask import Flask
 from flask_cors import CORS
 from flask_graphql import GraphQLView
 
+from .database import get_session
+
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -15,12 +17,16 @@ def create_app():
 
     app.add_url_rule(
         '/books/authorized/',
-        view_func=GraphQLView.as_view('authorized', schema=authorized.schema, graphiql=True))
+        view_func=GraphQLView.as_view('authorized', schema=authorized.schema, graphiql=True, batch=True))
 
     app.add_url_rule(
         '/books/secured/',
-        view_func=GraphQLView.as_view('secured', schema=secured.schema, graphiql=True))
+        view_func=GraphQLView.as_view('secured', schema=secured.schema, graphiql=True, batch=True))
 
     CORS(app)
+
+    @app.teardown_appcontext
+    def shutdown_session(exception=None):
+        get_session().remove()
 
     return app

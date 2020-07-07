@@ -27,7 +27,7 @@ class CreateBook(graphene.Mutation):
 
         image_path = Upload()
 
-        authors_id = graphene.List(graphene.ID, required=True)
+        authors = graphene.List(graphene.ID, required=True)
 
         isbn = graphene.String()
         publishing_house = graphene.String()

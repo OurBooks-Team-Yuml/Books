@@ -1,3 +1,4 @@
+import itertools
 import uuid
 
 from typing import Iterator, Optional
@@ -8,12 +9,21 @@ from .exceptions import *
 from .repositories import *
 
 
-def get_all_authors(repository: BaseAuthorRepository) -> Iterator[Author]:
-    return repository.get_authors()
+ITEMS_ON_PAGE = 20
+
+def _paginate(page: int, objects: Iterator) -> Iterator:
+    for obj in itertools.islice(objects, (page - 1) * ITEMS_ON_PAGE, page * ITEMS_ON_PAGE):
+        yield obj
 
 
-def get_all_books(repository: BaseBookRepository) -> Iterator[Book]:
-    return repository.get_books()
+def get_all_authors(page: int, repository: BaseAuthorRepository) -> Iterator[Author]:
+    all_authors = repository.get_authors()
+    return _paginate(page, all_authors)
+
+
+def get_all_books(page: int, repository: BaseBookRepository) -> Iterator[Book]:
+    all_books = repository.get_books()
+    return _paginate(page, all_books)
 
 
 def get_single_book(id: int, repository: BaseBookRepository) -> Optional[Book]:
