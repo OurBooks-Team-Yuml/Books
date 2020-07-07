@@ -44,7 +44,7 @@ class RelatedBookType(graphene.ObjectType):
 
     image_path = Upload()
 
-    authors_id = graphene.List(BookAuthorType)
+    authors = graphene.List(BookAuthorType)
 
     isbn = graphene.String()
     publishing_house = graphene.String()
@@ -52,6 +52,9 @@ class RelatedBookType(graphene.ObjectType):
     published_date = Date()
 
     categories = graphene.List(CategoryType)
+
+    def resolve_authors(book: Book, info) -> list:
+        return book.authors_id
 
 
 class BookType(RelatedBookType):

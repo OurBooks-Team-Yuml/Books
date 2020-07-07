@@ -24,7 +24,7 @@ class BookRepository(BaseBookRepository):
     def create(self, data: dict) -> Book:
         session = get_session()
 
-        authors_id = data.pop('authors_id', None)
+        authors_id = data.pop('authors', None)
         categories = data.pop('categories', None)
 
         book = BookDB(**data)
