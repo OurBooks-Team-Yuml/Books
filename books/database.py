@@ -5,7 +5,7 @@ from elasticsearch import Elasticsearch
 from sqlalchemy import (create_engine, Column, Date, ForeignKey,
     Integer, MetaData, String, Table, Text)
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.orm import relationship, scoped_session, sessionmaker
 
 from .fixtures.dev import authors, books, categories
 
@@ -13,6 +13,9 @@ engine = create_engine(os.environ['DATABASE_URI'])
 metadata = MetaData(engine)
 Base = declarative_base()
 
+db_session = scoped_session(sessionmaker(autocommit=False,
+                                         autoflush=False,
+                                         bind=engine))
 
 joined_table = Table("authors_books", Base.metadata,
     Column("author_id", Integer, ForeignKey("authors.id"), primary_key=True),
@@ -107,5 +110,4 @@ if not engine.dialect.has_table(engine, 'authors'):
 
 
 def get_session():
-    Session = sessionmaker(bind=engine)
-    return Session()
+    return db_session
