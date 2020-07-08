@@ -1,7 +1,7 @@
 from typing import Iterator, Optional
 
 from books.database import Author as AuthorDB, Book as BookDB, Category, get_session
-from books.entities import Book
+from books.entities import Author, Book, Category as CategoryEntity
 from books.use_cases.repositories import BaseBookRepository
 
 
@@ -39,10 +39,42 @@ class BookRepository(BaseBookRepository):
 
         return self._create_book(book)
 
+    def _create_authors(self, authors: list) -> list:
+        returned_authors = []
+
+        for author in authors:
+            returned_authors += [Author(
+                author.id,
+                author.first_name,
+                author.last_name,
+                author.birthday_date,
+                author.biography,
+                author.image_path,
+                []
+            )]
+
+        return returned_authors
+
+    def _create_categories(self, categories: list) -> list:
+        returned_categories = []
+
+        for category in categories:
+            returned_categories += [
+                CategoryEntity(
+                    category.id,
+                    category.name
+                )
+            ]
+
+        return returned_categories
+
     def _create_book(self, book: BookDB) -> Book:
+        authors = self._create_authors(book.authors_id)
+        categories = self._create_categories(book.categories)
+
         return Book(
             book.id,
-            book.authors_id,
+            authors,
             book.name,
             book.description,
             book.related_book,
@@ -50,5 +82,5 @@ class BookRepository(BaseBookRepository):
             book.isbn,
             book.publishing_house,
             book.published_date,
-            book.categories,
+            categories,
         )
