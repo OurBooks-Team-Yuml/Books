@@ -1,5 +1,6 @@
 import itertools
 import uuid
+import os
 
 from typing import Iterator, Optional
 
@@ -50,7 +51,11 @@ def new_author(data: dict, image: bytes,
 
     if image:
         key = f"{data['first_name']}-{data['last_name']}-{uuid.uuid4()}.{image.filename.split('.')[-1]}"
-        path = s3.save_author_image(image, key)
+        path = (
+            f"http://localhost:4566/"
+            f"{os.environ['AWS_AUTHORS_BUCKET_NAME']}"
+            f"{s3.save_book_image(image, key)}"
+        )
 
     author = repository.create({**data, 'image_path': path})
     elastic.add_author(author)
@@ -63,7 +68,11 @@ def new_book(data: dict, image: bytes,
 
     if image:
         key = f"{data['name']}-{uuid.uuid4()}.{image.filename.split('.')[-1]}"
-        path = s3.save_book_image(image, key)
+        path = (
+            f"http://localhost:4566/"
+            f"{os.environ['AWS_BOOKS_BUCKET_NAME']}/"
+            f"{s3.save_book_image(image, key)}"
+        )
 
     book = repository.create({**data, 'image_path': path})
     elastic.add_book(book)

@@ -43,4 +43,7 @@ class CreateBook(graphene.Mutation):
     def mutate(root, info, **args):
         ### TODO Validation
         ### TODO Authorization
+        if request.files.get('1'):
+            return new_book(args, request.files.get('1', None), *get_repositories())
+
         return new_book(args, request.files.get('image_path', None), *get_repositories())
